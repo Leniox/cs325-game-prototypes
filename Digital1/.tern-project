@@ -1,0 +1,15 @@
+{
+  "ecmaVersion": 7,
+  "libs": [],
+  "loadEagerly": [],
+  "dontLoad": [
+    "node_modules/**"
+  ],
+  "plugins": {
+    "Phaser": {},
+    "doc_comment": true,
+    "complete_strings": {
+      "maxLength": 15
+    }
+  }
+}

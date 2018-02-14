@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextobjectid="23">
+ <tileset firstgid="1" source="roguelikeCity_magenta_please.tsx"/>
+ <tileset firstgid="1132" source="roguelikeCity_transparent.tsx"/>
+ <tileset firstgid="2263" source="roguelikeCity_magenta.tsx"/>
+ <tileset firstgid="3235" source="roguelikeCity_magenta_16x16.tsx"/>
+ <tileset firstgid="4366" source="tunnel.tsx"/>
+ <tileset firstgid="5302" source="rail_road.tsx"/>
+ <layer name="Tile Layer 1" width="30" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztz7ENACAMA8EMwIxhF1icDEDr7l6KLKW7XlV7roP768z/ruz+Sjp5eXl5eXl5eXl5U14p0QM8Vy42
+  </data>
+ </layer>
+ <layer name="Street_Layer" width="30" height="30">
+  <data encoding="base64" compression="zlib">
+   eJxjYBhZoJeb9hgb2MhNezwKRuN3FNAGkJI+No6mqyEHRsuNUUALMJquRsEoGAVDBQAAjKWmKQ==
+  </data>
+ </layer>
+ <layer name="Tunnel_Layer" width="30" height="30">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAPzOIhUyMayOVG5Z/jws8nJIduHr2BF5XCZajYO9LAaPxCgDQwn8kAsSw3dj6lYviAAzd+PqViAwFGSroiFMf3kMp0ZSS1+7iwq0EGpKqnJxgp8UsMkAPGkzw3fjFK+diAE1DemRu/GKV8dGBA4/AfTVejYBSMAmoBAFilFdc=
+  </data>
+ </layer>
+</map>

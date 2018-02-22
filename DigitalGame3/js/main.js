@@ -17,7 +17,7 @@ window.onload = function() {
         game.load.image( 'myChar', 'assets/phaser.png' );
         game.load.image('background', 'assets/curtains_1500.jpg')
         game.load.image('floor', 'assets/stage_no_backgrond.png')
-        game.load.spritesheet('thief', 'assets/thief_sprite_nobackgronud.png', 67 , 190, 55);
+        game.load.spritesheet('thief', 'assets/thief_sprite_nobackgronud.png', 67 , 198, 55);
         game.load.image( 'right_Arrow', 'assets/right_Arrow.png' );
         game.load.image( 'left_Arrow', 'assets/left_Arrow.png' );
         game.load.image( 'down_Arrow', 'assets/down_Arrow.png' );
@@ -82,6 +82,7 @@ window.onload = function() {
         myChar = game.add.sprite(game.width/2, game.height/2, 'thief', 8);
         myChar.animations.add('right', [8,9,10,9,8]);
         myChar.animations.add('left', [10,9,8,9,10]);
+        myChar.animations.add('speed' , [50])
 
         endGameTextGroup = game.add.group();
 
@@ -267,7 +268,7 @@ window.onload = function() {
           lives = 4;
           myChar.body.gravity.y = 400;
 
-      }
+      } 
 
     function collisionHandler(arrow) {
           arrow.kill();
@@ -280,6 +281,9 @@ window.onload = function() {
     {
         var arrowIndex = Math.floor(Math.random() * 4);
             var position = Math.floor(Math.random() * 5) + 1;
+            var arrowSpeed = Math.floor(Math.random() * 4) + 1;
+            arrowSpeed = arrowSpeed * 75
+
             var xPosition = position * 200 - 100;
             if (arrowIndex === 0)
             {
@@ -290,7 +294,7 @@ window.onload = function() {
     
                  someArrow.outOfBoundsKill = true
                  someArrow.checkWorldBounds = true
-                 someArrow.body.velocity.y = 200
+                 someArrow.body.velocity.y = arrowSpeed
            
 
 
@@ -307,7 +311,7 @@ window.onload = function() {
 
                  someArrow.outOfBoundsKill = true
                  someArrow.checkWorldBounds = true
-                 someArrow.body.velocity.y = 200
+                 someArrow.body.velocity.y = arrowSpeed
          
 
             }
@@ -323,7 +327,7 @@ window.onload = function() {
 
                  someArrow.outOfBoundsKill = true
                  someArrow.checkWorldBounds = true
-                 someArrow.body.velocity.y = 200
+                 someArrow.body.velocity.y = arrowSpeed
                  game.physics.arcade.overlap(someArrow, floor, killArrow, null, this);
 
          
@@ -334,10 +338,9 @@ window.onload = function() {
                  someArrow.direction = "down"
 
                  game.physics.enable(someArrow, Phaser.Physics.ARCADE);
-                 someArrow.body.velocity.y = 200
+                 someArrow.body.velocity.y = arrowSpeed
                  arrowGroup.add(someArrow)
 
-                 console.log(someArrow)
 
             }
     }
@@ -517,7 +520,7 @@ window.onload = function() {
 
 
 
-        if (game.time.now > spawnTime)
+        if (game.time.now > spawnTime && lives > 0)
         {
             spawnTime = game.time.now + spawnSpeed
             numSpawned = numSpawned + 1;

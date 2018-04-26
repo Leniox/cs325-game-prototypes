@@ -78,14 +78,14 @@ window.onload = function() {
         balloon = game.add.sprite(game.width/2 - 100, game.height/2 + 100 , 'balloon');
         hand = game.add.sprite(game.width/2 - 100, game.height/2 + 100 , 'hand');
         hand.enableBody = true
-        game.physics.enable([ hand ], Phaser.Physics.ARCADE);
+        game.physics.enable([ hand, balloon ], Phaser.Physics.ARCADE);
 
         // hand.body.collideWorldBounds = true;
 
 
         endGameTextGroup = game.add.group();
         endGameTextGroup.visible = false;
-        var text = game.add.text(game.width/2 - 200, game.height/2, "You Died! Press Space Bar to replay.", { fontSize: '32px', fill: '#ffffff' }, endGameTextGroup);
+        var text = game.add.text(game.width/2 - 200, game.height/2, "You Died! Please refresh to restart", { fontSize: '32px', fill: '#ffffff' }, endGameTextGroup);
 
 
         round1Group = game.add.group();
@@ -157,6 +157,7 @@ window.onload = function() {
 
             someBlock.physicsBodyType = Phaser.Physics.ARCADE;
             game.physics.arcade.enable(someBlock);
+            game.physics.arcade.collide(balloon, someBlock, die)
             someBlock.body.bounce.setTo(1, 1);
             round1Group.add(someBlock)
             // round1Group.create(xPosition, yPosition, 'small_block')
@@ -175,7 +176,7 @@ window.onload = function() {
     function setUpRound2()
     {
         round2Group = game.add.group();
-        var numberOfRows = Math.floor(Math.random() * 3);
+        var numberOfRows = Math.floor(Math.random() * 3) + 1;
         // var numberOfRows = 2
 
         console.log("number of rows: " + numberOfRows)
@@ -347,8 +348,9 @@ window.onload = function() {
     {
         setUpRound2
     }
-    function die()
+    function die(balloon, round)
     {
+    
       balloon.kill();
       round1Group.kill();
       round2Group.kill();
@@ -392,7 +394,7 @@ window.onload = function() {
         hand.position.set(game.input.mousePointer.worldX, game.input.mousePointer.worldY);
         round1Group.forEachAlive(function(round1Group)    
         {       
-            round1Group.body.y += 0.5 + objectSpeed;   
+            round1Group.body.y += 0.7 + objectSpeed;   
             round1Group.body.velocity.x = 0
             round1Group.body.velocity.y = 0
 
@@ -420,7 +422,7 @@ window.onload = function() {
         allPast = 0
         round2Group.forEachAlive(function(round2Group)    
         {       
-            round2Group.body.y += 0.5 + objectSpeed;   
+            round2Group.body.y += 0.7 + objectSpeed;   
             round2Group.body.velocity.x = 0
             round2Group.body.velocity.y = 0
 
@@ -472,13 +474,19 @@ window.onload = function() {
             setUpRound3()
         }
         
-
+        game.physics.arcade.collide(balloon, round1Group, function(){
+            console.log("asdaishdjas")
+          });
 
 
         game.physics.arcade.collide(hand, round1Group, swipe)
         game.physics.arcade.collide(hand, round2Group, swipe)
-        game.physics.arcade.collide(balloon, round1Group, die)
-        game.physics.arcade.collide(balloon, round2Group, die)
+
+
+        //why is this code not working?????
+        game.physics.arcade.overlap(balloon, round1Group, die, null, this);
+        game.physics.arcade.overlap(balloon, round1Group, die)
+        game.physics.arcade.overlap(balloon, round2Group, die)
 
 
 

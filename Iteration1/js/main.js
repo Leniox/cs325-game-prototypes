@@ -49,11 +49,15 @@ window.onload = function() {
     var round2Group = null
     var round3Group = null
     var hasStartedRound2 = false
-    var round2IsDone = true
+    var hasStartedRound3 = false
     var howManyRoundsOfRound2 = 0
     var objectSpeed = 0.1
     var endGameTextGroup;
     var music;
+    var leftEmitter;
+    var rightEmitter;
+    var round3IsDone = false;
+    var round2IsDone = false
 
 
     
@@ -69,9 +73,9 @@ window.onload = function() {
         // bouncy.anchor.setTo( 0.5, 0.5 );
 
 
-        music = game.add.audio('boden');
+        // music = game.add.audio('boden');
 
-        music.play();
+        // music.play();
         // game.physics.arcade.checkCollision.bottom = false;
         // game.physics.arcade.checkCollision.top    = false;
 
@@ -91,7 +95,9 @@ window.onload = function() {
         round1Group = game.add.group();
         round1Group.enableBody = true
         round1Group.physicsBodyType = Phaser.Physics.ARCADE;
+        // setUpRound1()
         setUpRound1()
+
         round1Group.setAll('body.bounce.x', 0);
         round1Group.setAll('body.bounce.y', 0);
         // round1Group.setAll('outOfBoundsKill', true);
@@ -113,6 +119,19 @@ window.onload = function() {
 
         balloon.animations.add('fly', [0,1,2,3,4,3,2,1]);
         balloon.animations.play('fly', 10, true);
+
+
+        leftEmitter = game.add.emitter(50, game.world.centerY - 300);
+        leftEmitter.bounce.setTo(0.5, 0.5);
+        leftEmitter.setXSpeed(50, 100);
+        leftEmitter.setYSpeed(-2, 75);
+        leftEmitter.makeParticles('small_star', 0, 25, true, false);
+    
+        rightEmitter = game.add.emitter(game.world.width - 50, game.world.centerY - 300);
+        rightEmitter.bounce.setTo(0.5, 0.5);
+        rightEmitter.setXSpeed(-50, -100);
+        rightEmitter.setYSpeed(-2, 75);
+        rightEmitter.makeParticles('small_star', 1, 25, true, false);
   
 
 
@@ -138,7 +157,7 @@ window.onload = function() {
     function swipe(hand, someBlock) {
 
         console.log("collision between hand and block")
-        someBlock.body.velocity.y = -1000;
+        someBlock.body.velocity.y = -1500;
         someBlock.body.angularVelocity = 200;
 
 
@@ -175,6 +194,8 @@ window.onload = function() {
     //another thing I want to do is have the objects move toward you if that option is chosen randomly
     function setUpRound2()
     {
+        console.log("WTF")
+
         round2Group = game.add.group();
         var numberOfRows = Math.floor(Math.random() * 3) + 1;
         // var numberOfRows = 2
@@ -346,7 +367,14 @@ window.onload = function() {
     //emitter round (boss round or hardest round since it's an emitter.)
     function setUpRound3()
     {
-        setUpRound2
+        console.log("inside round3")
+        
+    // explode, lifespan, frequency, quantity
+        leftEmitter.start(false, 0, 250);
+        rightEmitter.start(false, 0, 250);
+
+        game.physics.arcade.collide(hand, leftEmitter, swipe)
+        game.physics.arcade.collide(hand, rightEmitter, swipe)
     }
     function die(balloon, round)
     {
@@ -388,6 +416,9 @@ window.onload = function() {
         // in X or Y.
         // This function returns the rotation angle that makes it visually match its
         // new trajectory.
+
+        game.physics.arcade.collide(hand, leftEmitter, swipe)
+        game.physics.arcade.collide(hand, rightEmitter, swipe)
         
         background.tilePosition.y += 2
         var allPast = 0
@@ -445,13 +476,22 @@ window.onload = function() {
 
 
 
+        if (leftEmitter.countLiving() == 0 && rightEmitter.countLiving() == 0 && hasStartedRound3)
+        {
+            console.log("going back to round2HELLOASIDNAISHD")
+            round3IsDone = true
+            hasStartedRound3 = false
+            howManyRoundsOfRound2 = 0
 
+        }
 
-        if (round1Group.countLiving() == 0 && !hasStartedRound2)
+        if (round1Group.countLiving() == 0 && !hasStartedRound2 && !hasStartedRound3)
         {
             hasStartedRound2 = true
             objectSpeed+=0.15
+            console.log("WTF")
             setUpRound2()
+            howManyRoundsOfRound2+=1
             round2IsDone = false
             
         }
@@ -461,17 +501,21 @@ window.onload = function() {
             round2IsDone = true
         }
 
-        if (hasStartedRound2 == true && round2IsDone && howManyRoundsOfRound2 < 3)
+        if (hasStartedRound2 == true && round2IsDone && howManyRoundsOfRound2 < 2 && !hasStartedRound3)
         {
             howManyRoundsOfRound2++
+            console.log("WTF")
+
+            console.log("rounds2: " + howManyRoundsOfRound2)
             objectSpeed+=0.15
             setUpRound2()
             
             round2IsDone = false
         }
-        if (howManyRoundsOfRound2 == 3)
+        if (howManyRoundsOfRound2 == 2 && !hasStartedRound3 && round2IsDone)
         {
             setUpRound3()
+            hasStartedRound3 = true
         }
         
         game.physics.arcade.collide(balloon, round1Group, function(){
@@ -482,6 +526,9 @@ window.onload = function() {
         game.physics.arcade.collide(hand, round1Group, swipe)
         game.physics.arcade.collide(hand, round2Group, swipe)
 
+        game.physics.arcade.collide(balloon, leftEmitter, die)
+        game.physics.arcade.collide(balloon, rightEmitter, die)
+          
 
         //why is this code not working?????
         game.physics.arcade.overlap(balloon, round1Group, die, null, this);
